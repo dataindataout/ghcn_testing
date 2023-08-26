@@ -1,0 +1,43 @@
+- name: Check that database is running
+  hosts: east-node1
+  tasks:
+    - name: Check for output from database
+      ansible.builtin.command: "{{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -c 'select version()'"
+      register: dbversion
+      until: "dbversion is not failed"
+      retries: 10
+      delay: 1
+
+- name: Ensure database on east
+  hosts: east-node1
+  tasks:
+    - name: Create ghcn database
+      ansible.builtin.command: "{{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -c 'create database ghcn'"
+      ignore_errors: true
+
+- name: Ensure tables on east
+  hosts: east-node1
+  tasks:
+    - name: Copy countries sql file
+      copy: src=countries.sql dest=/tmp/countries.sql
+    - name: Create countries table
+      ansible.builtin.command: >
+        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/countries.sql
+
+    - name: Copy states sql file
+      copy: src=states.sql dest=/tmp/states.sql
+    - name: Create states table
+      ansible.builtin.command: >
+        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/states.sql
+
+    - name: Copy inventory sql file
+      copy: src=inventory.sql dest=/tmp/inventory.sql
+    - name: Create inventory table
+      ansible.builtin.command: >
+        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/inventory.sql
+
+    - name: Copy stations sql file
+      copy: src=stations.sql dest=/tmp/stations.sql
+    - name: Create stations table
+      ansible.builtin.command: >
+        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/stations.sql

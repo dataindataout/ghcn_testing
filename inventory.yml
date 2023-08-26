@@ -1,0 +1,14 @@
+east:
+  hosts:
+    east-node1:
+      ansible_host: 127.0.0.1
+      instance_number: 1
+      yb_placement_zone: us-east1-a
+    east-node2:
+      ansible_host: 127.0.0.2
+      instance_number: 2
+      yb_placement_zone: us-east1-b
+    east-node3:
+      ansible_host: 127.0.0.3
+      instance_number: 3
+      yb_placement_zone: us-east1-c
