@@ -15,7 +15,13 @@ The command for provisioning a test cluster is:
 
 After the cluster is running, various scenarios can be run. Current available scenarios are:
 
-- TBD
+- Add lookup tables (states, stations, countries, inventory)
+
+Run these python scripts in a virtual environment (e.g., venv) with the required modules:
+
+- pandas
+- sqlalchemy
+- psycopg2 (or psycopg2-binary for Apple M1)
 
 ## Prerequisites
 

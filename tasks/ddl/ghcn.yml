@@ -15,29 +15,29 @@
       ansible.builtin.command: "{{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -c 'create database ghcn'"
       ignore_errors: true
 
-- name: Ensure tables on east
+- name: Ensure data is available to create tables in scenarios
   hosts: east-node1
   tasks:
-    - name: Copy countries sql file
-      copy: src=countries.sql dest=/tmp/countries.sql
-    - name: Create countries table
-      ansible.builtin.command: >
-        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/countries.sql
+    - name: Download stations file
+      ansible.builtin.get_url:
+        url: https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-stations.txt
+        dest: /tmp/stations.txt
+        mode: "0775"
 
-    - name: Copy states sql file
-      copy: src=states.sql dest=/tmp/states.sql
-    - name: Create states table
-      ansible.builtin.command: >
-        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/states.sql
+    - name: Download countries file
+      ansible.builtin.get_url:
+        url: https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-countries.txt
+        dest: /tmp/countries.txt
+        mode: "0775"
 
-    - name: Copy inventory sql file
-      copy: src=inventory.sql dest=/tmp/inventory.sql
-    - name: Create inventory table
-      ansible.builtin.command: >
-        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/inventory.sql
+    - name: Download states file
+      ansible.builtin.get_url:
+        url: https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-states.txt
+        dest: /tmp/states.txt
+        mode: "0775"
 
-    - name: Copy stations sql file
-      copy: src=stations.sql dest=/tmp/stations.sql
-    - name: Create stations table
-      ansible.builtin.command: >
-        {{ yb_executable_dir }}/ysqlsh -h {{ ansible_host }} -d ghcn -f /tmp/stations.sql
+    - name: Download inventory file
+      ansible.builtin.get_url:
+        url: https://www.ncei.noaa.gov/pub/data/ghcn/daily/ghcnd-inventory.txt
+        dest: /tmp/inventory.txt
+        mode: "0775"
